@@ -53,4 +53,4 @@ gh.load("http://your-graphhopper-service.com");
 GHResponse rsp = gh.route(new GHRequest(...));
 ```
 
-There are also clients for [Java Script](https://github.com/graphhopper/directions-api-js-client) and [other languages](https://github.com/graphhopper/directions-api-clients)).
+There are also clients for [Java Script](https://github.com/graphhopper/directions-api-js-client) and [other languages](https://github.com/graphhopper/directions-api-clients).
