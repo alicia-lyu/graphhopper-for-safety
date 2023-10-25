@@ -137,7 +137,10 @@ public class RouteResource {
         GHResponse ghResponse = graphHopper.route(request);
 
         double took = sw.stop().getMillisDouble();
-        String logStr = (httpReq.getRemoteAddr() + " " + httpReq.getLocale() + " " + httpReq.getHeader("User-Agent")) + " " + points + ", took: " + String.format("%.1f", took) + "ms, algo: " + algoStr + ", profile: " + profileName;
+        String logStr = (httpReq.getRemoteAddr() + " " + httpReq.getLocale() + " " 
+            + httpReq.getHeader("User-Agent")) + " " + points + ", took: " 
+            + String.format("%.1f", took) + "ms, algo: " + algoStr + ", profile: " + profileName
+            + "I want to modify route resource get";
 
         if (ghResponse.hasErrors()) {
             logger.info(logStr + " " + ghResponse);
@@ -179,6 +182,14 @@ public class RouteResource {
         profileResolverHints.putObject("profile", request.getProfile());
         profileResolverHints.putObject("has_curbsides", !request.getCurbsides().isEmpty());
         request.setProfile(profileResolver.resolveProfile(profileResolverHints));
+
+        request.putHint(Parameters.Algorithms.AltRoute.MAX_PATHS, 4).
+        putHint("alternative_route.max_exploration_factor", 5).
+        putHint(Parameters.Algorithms.AltRoute.MAX_WEIGHT, 3).
+        putHint(Parameters.Algorithms.AltRoute.MAX_SHARE, 0.98);
+
+        logger.debug("Calculating route with updated alt route parameters: %s\n", request.getHints().toString());
+
         removeLegacyParameters(request.getHints());
 
         GHResponse ghResponse = graphHopper.route(request);
@@ -191,7 +202,7 @@ public class RouteResource {
         String infoStr = httpReq.getRemoteAddr() + " " + httpReq.getLocale() + " " + httpReq.getHeader("User-Agent");
         String logStr = infoStr + " " + request.getPoints().size() + ", took: "
                 + String.format("%.1f", took) + " ms, algo: " + request.getAlgorithm() + ", profile: " + request.getProfile()
-                + ", custom_model: " + request.getCustomModel();
+                + ", custom_model: " + request.getCustomModel() + "I want to modify route resource post";
 
         if (ghResponse.hasErrors()) {
             throw new MultiException(ghResponse.getErrors());
